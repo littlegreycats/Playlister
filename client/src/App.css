@@ -154,6 +154,11 @@ body {
   overflow: scroll;
 }
 
+/* .MuiBox-root {
+  grid-template-columns: 100%;
+  grid-template-rows: 50% 50%;
+} */
+
 .list-card,
 .selected-list-card,
 .unselected-list-card {

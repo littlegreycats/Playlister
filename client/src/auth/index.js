@@ -10,13 +10,16 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    OPEN_LOGIN_ERR_MODAL: 'OPEN_LOGIN_ERR_MODAL',
+    CLOSE_LOGIN_ERR_MODAL: 'CLOSE_LOGIN_ERR_MODAL'
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        modalMessage: null,
     });
     const history = useHistory();
 
@@ -30,25 +33,43 @@ function AuthContextProvider(props) {
             case AuthActionType.GET_LOGGED_IN: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: payload.loggedIn
+                    loggedIn: payload.loggedIn,
+                    modalMessage: null,
                 });
             }
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    modalMessage: null,
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
-                    loggedIn: false
+                    loggedIn: false,
+                    modalMessage: null,
                 })
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    modalMessage: null,
+                })
+            }
+            case AuthActionType.OPEN_LOGIN_ERR_MODAL: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: false,
+                    modalMessage: payload.message,
+                })
+            }
+            case AuthActionType.CLOSE_LOGIN_ERR_MODAL: {
+                return setAuth({
+                    user: auth.user,
+                    loggedIn: false,
+                    modalMessage: null,
                 })
             }
             default:
@@ -100,10 +121,18 @@ function AuthContextProvider(props) {
             }
         } catch (err) {
             if (err.response.status === 400) {
-                console.log('email or password field is empty')
+                authReducer({
+                    type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
+                    payload: { message: 'email or password field is empty!' },
+                })
+                console.log(auth)
             }
             if (err.response.status === 401) {
-                console.log('invalid email or password')
+                authReducer({
+                    type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
+                    payload: { message: 'invalid email or password!' },
+                })
+                console.log(auth)
             }
         }
     }
@@ -128,6 +157,13 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.closeModal = function() {
+        authReducer({
+            type: AuthActionType.CLOSE_LOGIN_ERR_MODAL,
+            payload: null,
+        })
     }
 
     return (
