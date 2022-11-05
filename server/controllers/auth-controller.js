@@ -38,7 +38,10 @@ loginUser = async (req, res) => {
         if (!email || !password) {
             return res
                 .status(400)
-                .json({ errorMessage: "Please enter all required fields." });
+                .json({ 
+                    success: false,
+                    errorMessage: "Please enter all required fields."
+                });
         }
 
         const existingUser = await User.findOne({ email: email });
@@ -47,6 +50,7 @@ loginUser = async (req, res) => {
             return res
                 .status(401)
                 .json({
+                    success: false,
                     errorMessage: "Wrong email or password provided."
                 })
         }
@@ -58,6 +62,7 @@ loginUser = async (req, res) => {
             return res
                 .status(401)
                 .json({
+                    success: false,
                     errorMessage: "Wrong email or password provided."
                 })
         }

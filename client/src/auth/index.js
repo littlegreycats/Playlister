@@ -84,20 +84,33 @@ function AuthContextProvider(props) {
     }
 
     auth.loginUser = async function(email, password) {
-        const response = await api.loginUser(email, password);
-        if (response.status === 200) {
-            authReducer({
-                type: AuthActionType.LOGIN_USER,
-                payload: {
-                    user: response.data.user
-                }
-            })
-            history.push("/");
+        try { 
+            const response = await api.loginUser(email, password);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            } else {
+                console.log('failed')
+                history.push("/");
+            }
+        } catch (err) {
+            if (err.response.status === 400) {
+                console.log('email or password field is empty')
+            }
+            if (err.response.status === 401) {
+                console.log('invalid email or password')
+            }
         }
     }
 
     auth.logoutUser = async function() {
         const response = await api.logoutUser();
+        console.log(response.status)
         if (response.status === 200) {
             authReducer( {
                 type: AuthActionType.LOGOUT_USER,
