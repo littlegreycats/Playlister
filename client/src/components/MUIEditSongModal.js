@@ -18,9 +18,9 @@ const style = {
 
 export default function MUIEditSongModal() {
     const { store } = useContext(GlobalStoreContext);
-    const [ title, setTitle ] = useState(store.currentSong.title);
-    const [ artist, setArtist ] = useState(store.currentSong.artist);
-    const [ youTubeId, setYouTubeId ] = useState(store.currentSong.youTubeId);
+    const [ title, setTitle ] = useState('');
+    const [ artist, setArtist ] = useState('');
+    const [ youTubeId, setYouTubeId ] = useState('');
 
     function handleConfirmEditSong() {
         let newSongData = {
@@ -49,7 +49,7 @@ export default function MUIEditSongModal() {
 
     return (
         <Modal
-            open={store.listMarkedForDeletion !== null}
+            open={store.currentModal === 'EDIT_SONG'}
         >
             <Box sx={style}>
             <div

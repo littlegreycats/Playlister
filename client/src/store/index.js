@@ -346,7 +346,8 @@ function GlobalStoreContextProvider(props) {
         store.hideModals();
     }
 
-    store.showEditSongModal = (songIndex, songToEdit) => {
+    store.markSongForEditing = (songIndex, songToEdit) => {
+        console.log(`markSongForEditing(${songIndex}, ${songToEdit})`)
         storeReducer({
             type: GlobalStoreActionType.EDIT_SONG,
             payload: {currentSongIndex: songIndex, currentSong: songToEdit}
