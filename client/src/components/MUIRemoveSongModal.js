@@ -18,6 +18,8 @@ const style = {
 
 export default function MUIRemoveSongModal() {
     const { store } = useContext(GlobalStoreContext);
+    console.log(`MUIRemoveSongModal rendering`)
+    console.log(store.currentModal)
 
     function handleConfirmRemoveSong () {
         store.addRemoveSongTransaction();
@@ -38,7 +40,7 @@ export default function MUIRemoveSongModal() {
 
     return (
         <Modal
-            open={store.listMarkedForDeletion !== null}
+            open={store.currentModal === "REMOVE_SONG"}
         >
             <Box sx={style}>
             <div

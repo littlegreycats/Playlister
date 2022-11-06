@@ -351,7 +351,8 @@ function GlobalStoreContextProvider(props) {
             payload: {currentSongIndex: songIndex, currentSong: songToEdit}
         });        
     }
-    store.showRemoveSongModal = (songIndex, songToRemove) => {
+    store.markSongForDeletion = (songIndex, songToRemove) => {
+        console.log(`markSongForDeletion(${songIndex}, ${songToRemove})`)
         storeReducer({
             type: GlobalStoreActionType.REMOVE_SONG,
             payload: {currentSongIndex: songIndex, currentSong: songToRemove}
