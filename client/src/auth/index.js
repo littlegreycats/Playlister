@@ -91,16 +91,22 @@ function AuthContextProvider(props) {
     }
 
     auth.registerUser = async function(firstName, lastName, email, password, passwordVerify) {
-        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
-        if (response.status === 200) {
+        try {
+            const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                auth.loginUser(email, password)
+            }
+        } catch (err) {
             authReducer({
-                type: AuthActionType.REGISTER_USER,
-                payload: {
-                    user: response.data.user
-                }
+                type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
+                payload: { message: err.response.data.errorMessage },
             })
-            auth.loginUser(email, password)
-            // history.push("/login");
         }
     }
 
@@ -120,20 +126,10 @@ function AuthContextProvider(props) {
                 history.push("/");
             }
         } catch (err) {
-            if (err.response.status === 400) {
-                authReducer({
-                    type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
-                    payload: { message: 'email or password field is empty!' },
-                })
-                console.log(auth)
-            }
-            if (err.response.status === 401) {
-                authReducer({
-                    type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
-                    payload: { message: 'invalid email or password!' },
-                })
-                console.log(auth)
-            }
+            authReducer({
+                type: AuthActionType.OPEN_LOGIN_ERR_MODAL,
+                payload: { message: err.response.data.errorMessage },
+            })
         }
     }
 

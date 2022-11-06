@@ -12,9 +12,27 @@ import Link from '@mui/material/Link';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Alert from '@mui/material/Alert';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    display: 'grid',
+};
 
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
+    const open = (auth.modalMessage !== null)
+    const message = auth.modalMessage
+    console.log(open)
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -27,6 +45,8 @@ export default function RegisterScreen() {
             formData.get('passwordVerify')
         );
     };
+
+    const handleClose = () => auth.closeModal()
 
     return (
             <Container component="main" maxWidth="xs">
@@ -119,6 +139,33 @@ export default function RegisterScreen() {
                     </Box>
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
+                <Modal
+                id="login-err-modal"
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="login-err-modal"
+                aria-describedby="login-err-modal-description"
+                >
+                <Box sx={style}>
+                    <Typography id="login-err-modal-title" variant="h6" component="h2">
+                        <Alert severity="warning">
+                            {message}
+                        </Alert>
+                    </Typography>
+                    <Button
+                        style={{
+                            width: '50%',
+                            align: 'center',
+                            margin: 'auto',
+                        }}
+                        id="login-err-modal-close-button"
+                        variant="outlined"
+                        onClick={handleClose}
+                        >
+                        Close
+                    </Button>
+                </Box>
+            </Modal>
             </Container>
     );
 }
