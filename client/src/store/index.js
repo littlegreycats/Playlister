@@ -241,6 +241,7 @@ function GlobalStoreContextProvider(props) {
                                             playlist: playlist
                                         }
                                     });
+                                    store.setCurrentList(playlist._id)
                                 }
                             }
                             getListPairs(playlist);
