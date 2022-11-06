@@ -331,8 +331,13 @@ function GlobalStoreContextProvider(props) {
         store.deleteList(store.listIdMarkedForDeletion);
         store.hideModals();
     }
-    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
-    // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
+    store.unmarkListForDeletion = function() {
+        storeReducer({
+            type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload: {id: null, playlist: null}
+        })
+        store.hideModals();
+    }
 
     store.showEditSongModal = (songIndex, songToEdit) => {
         storeReducer({
