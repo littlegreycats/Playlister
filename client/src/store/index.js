@@ -56,7 +56,7 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         listIdMarkedForDeletion: null,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
     });
     const history = useHistory();
 
@@ -227,22 +227,26 @@ function GlobalStoreContextProvider(props) {
                 let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
-                    response = await api.updatePlaylistById(playlist._id, playlist);
-                    if (response.data.success) {
-                        async function getListPairs(playlist) {
-                            response = await api.getPlaylistPairs();
-                            if (response.data.success) {
-                                let pairsArray = response.data.idNamePairs;
-                                storeReducer({
-                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
-                                    payload: {
-                                        idNamePairs: pairsArray,
-                                        playlist: playlist
-                                    }
-                                });
+                    try {
+                        response = await api.updatePlaylistById(playlist._id, playlist);
+                        if (response.data.success) {
+                            async function getListPairs(playlist) {
+                                response = await api.getPlaylistPairs();
+                                if (response.data.success) {
+                                    let pairsArray = response.data.idNamePairs;
+                                    storeReducer({
+                                        type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                        payload: {
+                                            idNamePairs: pairsArray,
+                                            playlist: playlist
+                                        }
+                                    });
+                                }
                             }
+                            getListPairs(playlist);
                         }
-                        getListPairs(playlist);
+                    } catch (err) {
+                        console.log(err)
                     }
                 }
                 updateList(playlist);
@@ -318,18 +322,22 @@ function GlobalStoreContextProvider(props) {
         getListToDelete(id);
     }
     store.deleteList = function (id) {
+        console.log(`deleteList(${id})`)
         async function processDelete(id) {
             let response = await api.deletePlaylistById(id);
             if (response.data.success) {
-                store.loadIdNamePairs();
+                // store.unmarkListForDeletion();
                 history.push("/");
             }
         }
         processDelete(id);
     }
     store.deleteMarkedList = function() {
+        console.log(`deleteMarkedList: ${store.listIdMarkedForDeletion}`)
         store.deleteList(store.listIdMarkedForDeletion);
-        store.hideModals();
+        store.unmarkListForDeletion();
+        store.hideModals()
+        store.loadIdNamePairs()
     }
     store.unmarkListForDeletion = function() {
         storeReducer({
