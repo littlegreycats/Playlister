@@ -1,6 +1,8 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 import { Typography } from '@mui/material'
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
 
 /*
     Our Status bar React component goes at the bottom of our UI.
@@ -13,9 +15,11 @@ function Statusbar() {
     if (store.currentList)
         text = store.currentList.name;
     return (
-        <div id="playlister-statusbar">
-            <Typography variant="h4">{text}</Typography>
-        </div>
+        <Box sx={{ flexGrow: 1 }} id="playlister-statusbar">
+            <AppBar position="static">
+                <Typography variant="h4" style={{textAlign: "center"}}>{text}</Typography>
+            </AppBar>
+        </Box>
     );
 }
 
