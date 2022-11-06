@@ -326,7 +326,7 @@ function GlobalStoreContextProvider(props) {
         async function processDelete(id) {
             let response = await api.deletePlaylistById(id);
             if (response.data.success) {
-                // store.unmarkListForDeletion();
+                store.loadIdNamePairs();
                 history.push("/");
             }
         }
@@ -335,9 +335,7 @@ function GlobalStoreContextProvider(props) {
     store.deleteMarkedList = function() {
         console.log(`deleteMarkedList: ${store.listIdMarkedForDeletion}`)
         store.deleteList(store.listIdMarkedForDeletion);
-        store.unmarkListForDeletion();
-        store.hideModals()
-        store.loadIdNamePairs()
+        store.unmarkListForDeletion()
     }
     store.unmarkListForDeletion = function() {
         storeReducer({
