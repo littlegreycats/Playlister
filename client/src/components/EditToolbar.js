@@ -29,6 +29,7 @@ function EditToolbar() {
     }
     function handlePublish() {
         console.log('handlePublish')
+        store.publishCurrentPlaylist()
     }
 
     let publishButton = ''

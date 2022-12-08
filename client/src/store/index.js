@@ -557,6 +557,27 @@ function GlobalStoreContextProvider(props) {
         asyncLoadPublicPlaylists();
     }
 
+    store.publishCurrentPlaylist = function () {
+        console.log('publishCurrentPlaylist')
+        // GET THE LIST
+        let playlist = store.currentList
+        playlist.isPublic = true
+        // console.log(playlist)
+        async function updateList(playlist) {
+            console.log(playlist)
+            const response = await api.updatePlaylistById(playlist._id, playlist)
+            console.log(response.data)
+            if (response.data.success) {
+                console.log("playlist published!")
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: store.currentList
+                });
+            }
+        }
+        updateList(playlist)
+    }
+
     return (
         <GlobalStoreContext.Provider value={{
             store

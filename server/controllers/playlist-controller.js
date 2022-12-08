@@ -159,7 +159,8 @@ getPlaylists = async (req, res) => {
 updatePlaylist = async (req, res) => {
     const body = req.body
     console.log("updatePlaylist: " + JSON.stringify(body));
-    console.log("req.body.name: " + req.body.name);
+    console.log("req.body:---------------------------")
+    console.log(req.body);
 
     if (!body) {
         return res.status(400).json({
@@ -188,6 +189,7 @@ updatePlaylist = async (req, res) => {
 
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
+                    list.isPublic = body.playlist.isPublic;
                     list
                         .save()
                         .then(() => {
@@ -195,6 +197,7 @@ updatePlaylist = async (req, res) => {
                             return res.status(200).json({
                                 success: true,
                                 id: list._id,
+                                playlist: list,
                                 message: 'Playlist updated!',
                             })
                         })
