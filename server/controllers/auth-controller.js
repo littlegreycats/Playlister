@@ -172,9 +172,29 @@ registerUser = async (req, res) => {
     }
 }
 
+continueAsGuest = async (req, res) => {
+    // GUEST USER LOGIN
+    const token = auth.signGuestToken();
+    console.log(`token: ${token}`);
+
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: true
+    }).status(200).json({
+        success: true,
+        // user: {
+        //     firstName: 'Guest',
+        //     lastName: '',  
+        //     email: '',         
+        // }
+    })
+}
+
 module.exports = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    continueAsGuest,
 }

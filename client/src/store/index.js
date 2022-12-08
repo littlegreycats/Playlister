@@ -535,6 +535,28 @@ function GlobalStoreContextProvider(props) {
         });
     }
 
+    store.loadPublicPlaylists = function () {
+        console.log('loadPublicPlaylists')
+        async function asyncLoadPublicPlaylists() {
+            const response = await api.getPublicPlaylistPairs();
+            console.log(response)
+            if (response.data.success) {
+                let pairsArray = response.data.data;
+                pairsArray = pairsArray.filter(playlist => playlist.isPublic)
+                console.log(pairsArray)
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                    payload: pairsArray
+                });
+                // console.log(store.idNamePairs)
+            }
+            else {
+                console.log("API FAILED TO GET THE LIST PAIRS");
+            }
+        }
+        asyncLoadPublicPlaylists();
+    }
+
     return (
         <GlobalStoreContext.Provider value={{
             store

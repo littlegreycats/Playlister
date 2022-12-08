@@ -215,11 +215,25 @@ updatePlaylist = async (req, res) => {
         asyncFindUser(playlist);
     })
 }
+getPublicPlaylists = async (req, res) => {
+    await Playlist.find({ isPublic: true }, (err, playlists) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+        if (!playlists.length) {
+            return res
+                .status(404)
+                .json({ success: false, error: `Playlists not found` })
+        }
+        return res.status(200).json({ success: true, data: playlists })
+    }).catch(err => console.log(err))
+}
 module.exports = {
     createPlaylist,
     deletePlaylist,
     getPlaylistById,
     getPlaylistPairs,
     getPlaylists,
-    updatePlaylist
+    updatePlaylist,
+    getPublicPlaylists
 }

@@ -12,7 +12,8 @@ export const AuthActionType = {
     LOGOUT_USER: "LOGOUT_USER",
     REGISTER_USER: "REGISTER_USER",
     OPEN_LOGIN_ERR_MODAL: 'OPEN_LOGIN_ERR_MODAL',
-    CLOSE_LOGIN_ERR_MODAL: 'CLOSE_LOGIN_ERR_MODAL'
+    CLOSE_LOGIN_ERR_MODAL: 'CLOSE_LOGIN_ERR_MODAL',
+    LOGIN_GUEST: 'LOGIN_GUEST',
 }
 
 function AuthContextProvider(props) {
@@ -20,6 +21,7 @@ function AuthContextProvider(props) {
         user: null,
         loggedIn: false,
         modalMessage: null,
+        guestMode: false,
     });
     const history = useHistory();
 
@@ -35,6 +37,7 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: payload.loggedIn,
                     modalMessage: null,
+                    guestMode: payload.guestMode,
                 });
             }
             case AuthActionType.LOGIN_USER: {
@@ -42,6 +45,7 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: true,
                     modalMessage: null,
+                    guestMode: false,
                 })
             }
             case AuthActionType.LOGOUT_USER: {
@@ -49,6 +53,7 @@ function AuthContextProvider(props) {
                     user: null,
                     loggedIn: false,
                     modalMessage: null,
+                    guestMode: false,
                 })
             }
             case AuthActionType.REGISTER_USER: {
@@ -56,6 +61,7 @@ function AuthContextProvider(props) {
                     user: payload.user,
                     loggedIn: true,
                     modalMessage: null,
+                    guestMode: false,
                 })
             }
             case AuthActionType.OPEN_LOGIN_ERR_MODAL: {
@@ -63,6 +69,7 @@ function AuthContextProvider(props) {
                     user: auth.user,
                     loggedIn: false,
                     modalMessage: payload.message,
+                    guestMode: false,
                 })
             }
             case AuthActionType.CLOSE_LOGIN_ERR_MODAL: {
@@ -70,6 +77,15 @@ function AuthContextProvider(props) {
                     user: auth.user,
                     loggedIn: false,
                     modalMessage: null,
+                    guestMode: false,
+                })
+            }
+            case AuthActionType.LOGIN_GUEST: {
+                return setAuth({
+                    user: payload.user,
+                    loggedIn: true,
+                    modalMessage: null,
+                    guestMode: true,
                 })
             }
             default:
@@ -131,6 +147,30 @@ function AuthContextProvider(props) {
                 payload: { message: err.response.data.errorMessage },
             })
         }
+    }
+
+    auth.continueAsGuest = async function() {
+        console.log('continue as guest')
+        try {
+            const response = await api.continueAsGuest()
+            console.log(response)
+            if (response.status === 200) {
+                console.log('logging in guest...')
+                authReducer({
+                    type: AuthActionType.LOGIN_GUEST,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            } else {
+                console.log('failed')
+                history.push("/");
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        history.push(`/`)
     }
 
     auth.logoutUser = async function() {

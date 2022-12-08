@@ -33,6 +33,10 @@ export default function AppBanner() {
         auth.logoutUser();
     }
 
+    const handleContinueAsGuest = () => {
+        auth.continueAsGuest()
+    }
+
     const menuId = 'primary-search-account-menu';
     const loggedOutMenu = (
         <Menu
@@ -52,6 +56,7 @@ export default function AppBanner() {
         >
             <MenuItem onClick={handleMenuClose}><Link to='/login/'>Login</Link></MenuItem>
             <MenuItem onClick={handleMenuClose}><Link to='/register/'>Create New Account</Link></MenuItem>
+            <MenuItem onClick={handleMenuClose}><Link to='/'><button onClick={handleContinueAsGuest}>Continue As Guest</button></Link></MenuItem>
         </Menu>
     );
     const loggedInMenu = 
@@ -71,7 +76,26 @@ export default function AppBanner() {
             onClose={handleMenuClose}
         >
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </Menu>        
+        </Menu>
+
+    const guestMenu =
+    <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+    >
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+    </Menu>
 
     let editToolbar = "";
     let menu = loggedOutMenu;
@@ -82,10 +106,12 @@ export default function AppBanner() {
         }
     }
     
-    function getAccountMenu(loggedIn) {
+    function getAccountMenu() {
         let userInitials = auth.getUserInitials();
         console.log("userInitials: " + userInitials);
-        if (loggedIn) 
+        if (auth.guestMode)
+            return <AccountCircle />
+        if (auth.loggedIn) 
             return <div>{userInitials}</div>;
         else
             return <AccountCircle />;
@@ -114,7 +140,7 @@ export default function AppBanner() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            { getAccountMenu(auth.loggedIn) }
+                            { getAccountMenu() }
                         </IconButton>
                     </Box>
                 </Toolbar>

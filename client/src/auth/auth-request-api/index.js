@@ -40,11 +40,15 @@ export const registerUser = (firstName, lastName, email, password, passwordVerif
         passwordVerify : passwordVerify
     })
 }
+export const continueAsGuest = () => {
+    return api.post(`/continue-as-guest/`)
+}
 const apis = {
     getLoggedIn,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    continueAsGuest,
 }
 
 export default apis

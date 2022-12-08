@@ -50,6 +50,10 @@ function authManager() {
         }, process.env.JWT_SECRET);
     }
 
+    signGuestToken = () => {
+        return jwt.sign({}, process.env.JWT_SECRET)
+    }
+
     return this;
 }
 
