@@ -35,16 +35,60 @@ function SongCard(props) {
     }
     function handleRemoveSong(event) {
         console.log(`handleRemoveSong(${event})`)
-        store.markSongForDeletion(index, song);
+        if (!store.currentList.isPublic) store.markSongForDeletion(index, song);
     }
     function handleClick(event) {
         // DOUBLE CLICK IS FOR SONG EDITING
-        if (event.detail === 2) {
+        if (event.detail === 2 && !store.currentList.isPublic) {
             store.markSongForEditing(index, song);
         }
     }
 
     let cardClass = "list-card unselected-list-card";
+
+    let songCard =
+    <div
+        key={index}
+        id={'song-' + index + '-card'}
+        className={cardClass}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        draggable="true"
+        onClick={handleClick}
+    >
+        {index + 1}.
+        <a
+            id={'song-' + index + '-link'}
+            className="song-link"
+            href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
+            {song.title} by {song.artist}
+        </a>
+        <input
+            type="button"
+            id={"remove-song-" + index}
+            className="list-card-button"
+            value={"\u2715"}
+            onClick={handleRemoveSong}
+        />
+    </div>
+
+    let draggable = false
+    let deleteButton = ''
+    if (!store.currentList.isPublic) {
+        draggable = true
+        deleteButton =
+            <input
+                type="button"
+                id={"remove-song-" + index}
+                className="list-card-button"
+                value={"\u2715"}
+                onClick={handleRemoveSong}
+            />
+    }
+
     return (
         <div
             key={index}
@@ -55,7 +99,7 @@ function SongCard(props) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            draggable="true"
+            draggable={draggable}
             onClick={handleClick}
         >
             {index + 1}.
@@ -65,13 +109,7 @@ function SongCard(props) {
                 href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
                 {song.title} by {song.artist}
             </a>
-            <input
-                type="button"
-                id={"remove-song-" + index}
-                className="list-card-button"
-                value={"\u2715"}
-                onClick={handleRemoveSong}
-            />
+            {deleteButton}
         </div>
     );
 }

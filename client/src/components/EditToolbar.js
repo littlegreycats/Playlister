@@ -27,29 +27,63 @@ function EditToolbar() {
     function handleClose() {
         store.closeCurrentList();
     }
+    function handlePublish() {
+        console.log('handlePublish')
+    }
+
+    let publishButton = ''
+    if (!store.currentList.isPublic) {
+    publishButton = 
+        <Button
+            id='publish-button'
+            onClick={handlePublish}
+            variant="contained">
+                PUBLISH
+        </Button>
+    }
+
+    let addSongButton = ''
+    if (!store.currentList.isPublic) {
+        addSongButton = 
+        <Button
+            disabled={!store.canAddNewSong()}
+            id='add-song-button'
+            onClick={handleAddNewSong}
+            variant="contained">
+            <AddIcon />
+        </Button>
+    }
+
+    let undoButton = ''
+    if (!store.currentList.isPublic) {
+        undoButton = 
+        <Button 
+            disabled={!store.canUndo()}
+            id='undo-button'
+            onClick={handleUndo}
+            variant="contained">
+                <UndoIcon />
+        </Button>
+    }
+
+    let redoButton = ''
+    if (!store.currentList.isPublic) {
+        redoButton = 
+        <Button 
+            disabled={!store.canRedo()}
+            id='redo-button'
+            onClick={handleRedo}
+            variant="contained">
+                <RedoIcon />
+        </Button>
+    }
+
     return (
         <div id="edit-toolbar">
-            <Button
-                disabled={!store.canAddNewSong()}
-                id='add-song-button'
-                onClick={handleAddNewSong}
-                variant="contained">
-                <AddIcon />
-            </Button>
-            <Button 
-                disabled={!store.canUndo()}
-                id='undo-button'
-                onClick={handleUndo}
-                variant="contained">
-                    <UndoIcon />
-            </Button>
-            <Button 
-                disabled={!store.canRedo()}
-                id='redo-button'
-                onClick={handleRedo}
-                variant="contained">
-                    <RedoIcon />
-            </Button>
+            {publishButton}
+            {addSongButton}
+            {undoButton}
+            {redoButton}
             <Button 
                 disabled={!store.canClose()}
                 id='close-button'
