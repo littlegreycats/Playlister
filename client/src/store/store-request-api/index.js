@@ -47,7 +47,7 @@ const apis = {
     getPlaylistById,
     getPlaylistPairs,
     updatePlaylistById,
-    getPublicPlaylistPairs
+    getPublicPlaylistPairs,
 }
 
 export default apis
